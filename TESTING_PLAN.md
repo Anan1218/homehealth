@@ -281,31 +281,121 @@ markers =
 - Flaky test identification and tracking
 - Test result notifications
 
-## Implementation Phases
+## Implementation Plan: Minimal Viable Testing (1 Day)
 
-### Phase 1: Foundation (Week 1)
-- [x] Set up pytest configuration and global fixtures
-- [ ] Create feature test directory structure
-- [ ] Implement basic unit test patterns
-- [ ] Set up test database configuration
+### Current State Assessment
+- Basic FastAPI boilerplate ✓
+- Auth functionality (registration, login) ✓
+- Supabase integration ✓
+- Basic project structure ✓
 
-### Phase 2: Unit Test Coverage (Week 2-3)
-- [ ] Auth feature unit tests (100% coverage)
-- [ ] Core utilities unit tests
-- [ ] User feature unit tests
-- [ ] Health feature unit tests
+### Today's Goal: Get Essential Tests Running
 
-### Phase 3: Integration Testing (Week 4)
-- [ ] API endpoint integration tests
-- [ ] Database operation tests
-- [ ] External service integration tests
-- [ ] Cross-feature interaction tests
+#### Morning (2-3 hours): Setup Foundation
+- [ ] **Task 1**: Add basic testing dependencies (15 mins)
+  ```bash
+  # Add to requirements.txt
+  pytest-cov==4.0.0
+  factory-boy==3.3.0
+  faker==20.1.0
+  ```
+- [ ] **Task 2**: Create minimal pytest.ini (10 mins)
+- [ ] **Task 3**: Enhance existing conftest.py with auth fixtures (30 mins)
+- [ ] **Task 4**: Create basic test directory structure (15 mins)
 
-### Phase 4: E2E and Advanced Testing (Week 5)
-- [ ] Critical user journey E2E tests
-- [ ] Performance and load testing
-- [ ] Security testing integration
-- [ ] CI/CD pipeline integration
+#### Afternoon (2-3 hours): Write Essential Tests
+- [ ] **Task 5**: Auth unit tests (1 hour)
+  - Test password hashing/verification
+  - Test JWT token creation/validation
+  - Test auth schema validation
+- [ ] **Task 6**: Auth integration tests (1 hour)  
+  - Test registration endpoint
+  - Test login endpoint
+  - Test protected route access
+- [ ] **Task 7**: Basic health check test (15 mins)
+- [ ] **Task 8**: Run tests and fix any issues (30 mins)
+
+### What We're NOT Doing (For Now)
+- ❌ Complex E2E tests
+- ❌ Performance testing  
+- ❌ Load testing
+- ❌ Extensive mocking strategies
+- ❌ CI/CD integration
+- ❌ Coverage reports setup
+
+### Success Criteria for Today
+- [ ] Tests run with `pytest` command
+- [ ] Basic auth functionality is tested
+- [ ] At least 70% coverage on auth features
+- [ ] All tests pass consistently
+- [ ] Foundation ready for incremental additions
+
+### Next Steps (Future Sprints)
+- Add tests as you add features
+- Set up CI/CD when you're ready to deploy
+- Add E2E tests for critical user journeys
+- Add performance tests when you have users
+
+---
+
+## Detailed Tasks for Today
+
+### Task 1: Add Testing Dependencies (15 mins)
+```bash
+cd backend
+# Add these lines to requirements.txt
+echo "pytest-cov==4.0.0" >> requirements.txt
+echo "factory-boy==3.3.0" >> requirements.txt  
+echo "faker==20.1.0" >> requirements.txt
+pip install -r requirements.txt
+```
+
+### Task 2: Create pytest.ini (10 mins)
+```ini
+# backend/pytest.ini
+[tool:pytest]
+testpaths = tests app
+python_files = test_*.py
+addopts = --cov=app --cov-report=term-missing
+markers =
+    unit: Unit tests
+    integration: Integration tests
+```
+
+### Task 3: Create Basic Test Structure (15 mins)
+```
+backend/tests/
+├── __init__.py
+├── conftest.py (enhance existing)
+├── integration/
+│   ├── __init__.py
+│   └── test_auth_api.py
+└── unit/
+    ├── __init__.py
+    └── test_auth_service.py
+```
+
+### Task 4: Auth Unit Tests (1 hour)
+Write 5-8 focused unit tests for your existing auth logic:
+- Password hashing works
+- JWT tokens are created correctly
+- Schema validation catches bad input
+- Business logic handles edge cases
+
+### Task 5: Auth Integration Tests (1 hour)  
+Write 3-4 integration tests:
+- POST /auth/register creates user
+- POST /auth/login returns token
+- Protected routes require authentication
+- Invalid tokens are rejected
+
+### That's It!
+
+This gives you:
+✅ Working test suite you can run daily
+✅ Confidence in your auth system  
+✅ Foundation to add more tests incrementally
+✅ About 80% of the value with 5% of the complexity
 
 ## Best Practices
 
