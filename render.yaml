@@ -11,12 +11,7 @@ services:
     branch: main
     healthCheckPath: /health
     envVars:
-      - key: SUPABASE_URL
-        fromGroup: supabase
-      - key: SUPABASE_ANON_KEY
-        fromGroup: supabase
-      - key: SUPABASE_SERVICE_ROLE_KEY
-        fromGroup: supabase
+      - fromGroup: supabase
       - key: ENVIRONMENT
         value: production
       - key: PYTHONPATH
