@@ -22,25 +22,6 @@ services:
       - key: PYTHONPATH
         value: /app
 
-  # Frontend Static Site
-  - type: static
-    name: homehealth-app
-    staticPublishPath: ./frontend/dist
-    buildCommand: npm install && npm run build
-    pullRequestPreviewsEnabled: true
-    branch: main
-    rootDir: frontend
-    envVars:
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: homehealth-api
-          property: url
-      - key: VITE_SUPABASE_URL
-        fromGroup: supabase
-      - key: VITE_SUPABASE_ANON_KEY
-        fromGroup: supabase
-
 envVarGroups:
   - name: supabase
     envVars:
