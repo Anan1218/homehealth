@@ -1,0 +1,52 @@
+services:
+  # Backend API Service
+  - type: web
+    name: homehealth-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile.prod
+    dockerContext: ./backend
+    plan: starter
+    env: production
+    region: oregon
+    branch: main
+    healthCheckPath: /health
+    envVars:
+      - key: SUPABASE_URL
+        fromGroup: supabase
+      - key: SUPABASE_ANON_KEY
+        fromGroup: supabase
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        fromGroup: supabase
+      - key: ENVIRONMENT
+        value: production
+      - key: PYTHONPATH
+        value: /app
+
+  # Frontend Static Site
+  - type: static
+    name: homehealth-app
+    staticPublishPath: ./frontend/dist
+    buildCommand: npm install && npm run build
+    pullRequestPreviewsEnabled: true
+    branch: main
+    rootDir: frontend
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: homehealth-api
+          property: url
+      - key: VITE_SUPABASE_URL
+        fromGroup: supabase
+      - key: VITE_SUPABASE_ANON_KEY
+        fromGroup: supabase
+
+envVarGroups:
+  - name: supabase
+    envVars:
+      - key: SUPABASE_URL
+        value: # Add your Supabase URL
+      - key: SUPABASE_ANON_KEY
+        value: # Add your Supabase anon key
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: # Add your Supabase service role key 

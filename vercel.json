@@ -1,0 +1,28 @@
+{
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "framework": "vite",
+  "env": {
+    "VITE_API_URL": "@vite_api_url",
+    "VITE_SUPABASE_URL": "@vite_supabase_url", 
+    "VITE_SUPABASE_ANON_KEY": "@vite_supabase_anon_key"
+  }
+} 

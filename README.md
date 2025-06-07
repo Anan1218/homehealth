@@ -1,73 +1,65 @@
 # HomeHealth - Feature-Based Monorepo
 
-A modern healthcare application built with **feature-based architecture** following **SOLID principles**.
+A scalable healthcare application built with React.js frontend, FastAPI backend, and Supabase database using feature-based architecture and SOLID principles.
 
-## 🏗️ Architecture Overview
+## 🏗️ Architecture
 
-### Monorepo Structure
+**Feature-Based Organization**: Each feature (auth, appointments, patients, etc.) contains its own models, services, API routes, and UI components, promoting modularity and maintainability.
+
+### Project Structure
 ```
 homehealth/
-├── README.md                 # This file
-├── docker-compose.yml        # Development environment
-├── env.example              # Environment template
-├── frontend/                # React.js + TypeScript
-│   ├── src/
-│   │   ├── app/            # App-level config, routing
-│   │   ├── shared/         # Shared components, hooks, utils
-│   │   └── features/       # Feature modules
-│   │       ├── auth/       # Authentication feature
-│   │       ├── dashboard/  # Dashboard feature
-│   │       ├── health-tracking/
-│   │       └── user-profile/
-├── backend/                 # FastAPI + Python
-│   ├── app/
-│   │   ├── core/           # App config, database
-│   │   ├── shared/         # Shared utilities
-│   │   └── features/       # Feature modules
-│   │       ├── auth/       # Auth endpoints & logic
-│   │       ├── health/     # Health tracking
-│   │       └── users/      # User management
-├── shared/                  # Cross-platform types
-└── scripts/                # Development scripts
+├── frontend/           # React + Vite frontend
+│   ├── src/features/   # Feature-based UI components
+│   └── ...
+├── backend/            # FastAPI backend
+│   ├── app/features/   # Feature-based API modules
+│   └── ...
+└── docker-compose.yml  # Container orchestration
 ```
-
-## 🎯 Feature-Based Benefits
-
-- **Single Responsibility**: Each feature owns its complete functionality
-- **Scalability**: Add features without restructuring
-- **Team Ownership**: Teams can own entire feature verticals
-- **Code Discovery**: Related code lives together
-- **SOLID Compliance**: Clear separation of concerns
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+
-- Python 3.11+
 - Docker & Docker Compose
 - Supabase account
 
 ### Setup
-```bash
-# 1. Clone and setup
-git clone <your-repo>
-cd homehealth
-./scripts/setup.sh
 
-# 2. Configure environment
-cp env.example .env
-# Update .env with your Supabase credentials
+1. **Clone and navigate to project**
+   ```bash
+   git clone <repository-url>
+   cd homehealth
+   ```
 
-# 3. Start development environment
-docker-compose up
-```
+2. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit `.env` with your Supabase credentials:
+   ```env
+   SUPABASE_URL=https://your-project-id.supabase.co
+   SUPABASE_ANON_KEY=your_supabase_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+   ```
 
-### Manual Setup (Alternative)
+3. **Start the application**
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Access the application**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:8000
+   - API Docs: http://localhost:8000/docs
+
+## 🛠️ Development
+
+### Running Without Docker
 ```bash
 # Backend
 cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 
@@ -77,123 +69,131 @@ npm install
 npm run dev
 ```
 
-## 🛠️ Technology Stack
+### Docker vs Uvicorn
+- **Docker Compose**: Orchestrates the entire application stack (frontend + backend + networking)
+- **Uvicorn**: ASGI web server that runs inside the backend container
+- They work together: Docker Compose manages containers, Uvicorn serves the FastAPI app
 
-### Frontend
-- **React 18** with TypeScript
-- **Vite** for fast development
-- **React Router** for routing
-- **TanStack Query** for state management
-- **Supabase JS** for authentication
+## 🚀 Production Deployment
 
-### Backend
-- **FastAPI** with async support
-- **Supabase** for database & auth
-- **Pydantic** for data validation
-- **Python-Jose** for JWT handling
+### **Option 1: Render (Recommended)**
+Deploy both frontend and backend on Render:
 
-### Infrastructure
-- **Docker** for containerization
-- **Docker Compose** for development
-- **Supabase** as Backend-as-a-Service
+1. **Push to GitHub**
+   ```bash
+   git add .
+   git commit -m "Ready for production"
+   git push origin main
+   ```
+
+2. **Connect to Render**
+   - Go to [Render Dashboard](https://dashboard.render.com)
+   - Connect your GitHub repository
+   - Render will automatically detect `render.yaml`
+
+3. **Set Environment Variables**
+   - Add your Supabase credentials in Render dashboard
+   - Update the `envVarGroups` section in `render.yaml`
+
+4. **Deploy**
+   - Render will automatically deploy both services
+   - Frontend: `https://your-app-name.onrender.com`
+   - Backend: `https://your-api-name.onrender.com`
+
+### **Option 2: Vercel + Render**
+Best performance for frontend:
+
+1. **Deploy Frontend to Vercel**
+   ```bash
+   npx vercel --prod
+   ```
+   
+2. **Set Vercel Environment Variables**
+   ```bash
+   vercel env add VITE_API_URL
+   vercel env add VITE_SUPABASE_URL
+   vercel env add VITE_SUPABASE_ANON_KEY
+   ```
+
+3. **Deploy Backend to Render**
+   - Create new Web Service on Render
+   - Use `backend/Dockerfile.prod`
+   - Set environment variables
+
+### **Option 3: Automated Deployment**
+```bash
+# Run deployment script
+./scripts/deploy.sh
+```
+
+### **Production Checklist**
+
+- [ ] **Environment Variables Set**
+  - `SUPABASE_URL`
+  - `SUPABASE_ANON_KEY` 
+  - `SUPABASE_SERVICE_ROLE_KEY`
+  - `VITE_API_URL` (frontend)
+
+- [ ] **Security**
+  - Update CORS origins in `backend/app/main.py`
+  - Use HTTPS in production
+  - Secure API keys
+
+- [ ] **Performance**
+  - Frontend assets minified (`npm run build`)
+  - Backend health checks enabled
+  - CDN for static assets (optional)
+
+- [ ] **Monitoring**
+  - Health endpoint: `/health`
+  - Error logging
+  - Performance monitoring
+
+## 🏛️ SOLID Principles Implementation
+
+- **Single Responsibility**: Each feature module has focused responsibilities
+- **Open/Closed**: Services use dependency injection for extensibility
+- **Liskov Substitution**: Abstract base classes for consistent interfaces
+- **Interface Segregation**: Feature-specific interfaces and schemas
+- **Dependency Inversion**: Repository pattern with abstract base classes
 
 ## 📁 Feature Structure
-
-### Backend Feature Pattern
+Each feature follows this pattern:
 ```
-features/auth/
-├── router.py      # FastAPI endpoints
-├── service.py     # Business logic
-├── repository.py  # Data access (if needed)
-├── schemas.py     # Pydantic models
-└── models.py      # Database models (if needed)
-```
-
-### Frontend Feature Pattern
-```
-features/auth/
-├── components/    # React components
-├── hooks/        # Custom hooks
-├── services/     # API calls
-└── types/        # TypeScript types
+features/feature_name/
+├── __init__.py
+├── models.py       # Data models
+├── schemas.py      # Pydantic schemas
+├── repository.py   # Data access layer
+├── service.py      # Business logic
+└── router.py       # API endpoints
 ```
 
-## 🔧 Development
+## 🔧 Common Issues
 
-### Adding New Features
+### Backend Won't Start
+- **Error**: `email-validator is not installed`
+- **Fix**: Rebuild containers: `docker-compose up --build`
 
-1. **Backend Feature**:
-```bash
-mkdir -p backend/app/features/new-feature
-# Create router.py, service.py, schemas.py
-# Add router to main.py
-```
+### Environment Variables Missing
+- **Error**: `SUPABASE_URL variable is not set`
+- **Fix**: Copy `.env.example` to `.env` and add your Supabase credentials
 
-2. **Frontend Feature**:
-```bash
-mkdir -p frontend/src/features/new-feature/{components,hooks,services,types}
-# Create feature components and services
-```
+### Port Conflicts
+- **Error**: `Port already in use`
+- **Fix**: Stop other services on ports 5173/8000 or change ports in `docker-compose.yml`
 
-### API Endpoints
-- **Backend**: http://localhost:8000
-- **Frontend**: http://localhost:5173
-- **API Docs**: http://localhost:8000/docs
+### Production Deployment Issues
+- **Error**: Build failures
+- **Fix**: Test locally first with `./scripts/deploy.sh`
 
-### Environment Variables
-```bash
-# Required in .env
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-```
+## 🚀 Next Steps
 
-## 🏥 Current Features
+1. Set up Supabase database tables
+2. Configure authentication policies
+3. Add feature-specific components
+4. Implement business logic in services
+5. Add comprehensive testing
+6. Deploy to production
 
-### ✅ Implemented
-- **Authentication**: Register, login, logout
-- **Project Structure**: Feature-based organization
-- **Docker Setup**: Development environment
-- **SOLID Architecture**: Clean separation of concerns
-
-### 🚧 Planned
-- **Health Tracking**: Vital signs, medications
-- **Dashboard**: Health overview and analytics
-- **User Profiles**: Personal health information
-- **Notifications**: Health reminders
-
-## 🧪 Testing
-
-```bash
-# Backend tests
-cd backend
-pytest
-
-# Frontend tests
-cd frontend
-npm test
-```
-
-## 📦 Deployment
-
-### Production Build
-```bash
-# Frontend
-cd frontend
-npm run build
-
-# Backend
-cd backend
-# Use Dockerfile for production deployment
-```
-
-## 🤝 Contributing
-
-1. Follow feature-based structure
-2. Maintain SOLID principles
-3. Add tests for new features
-4. Update this README for major changes
-
-## 📄 License
-
-MIT License - see LICENSE file for details 
+Built with ❤️ using feature-based architecture and SOLID principles. 
