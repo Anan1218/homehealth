@@ -5,7 +5,7 @@ import pytest
 class TestHealthCheck:
     """Integration tests for health check endpoints"""
     
-    def test_health_endpoint_should_return_healthy_status(self, client, mock_auth_service):
+    def test_health_endpoint_should_return_healthy_status(self, client):
         """Test GET /health returns healthy status"""
         # Act
         response = client.get("/health")
@@ -16,7 +16,7 @@ class TestHealthCheck:
         assert data["status"] == "healthy"
         assert data["service"] == "homehealth-api"
     
-    def test_root_endpoint_should_return_welcome_message(self, client, mock_auth_service):
+    def test_root_endpoint_should_return_welcome_message(self, client):
         """Test GET / returns welcome message"""
         # Act
         response = client.get("/")

@@ -42,28 +42,13 @@ backend/
 │   ├── e2e/
 │   │   ├── __init__.py
 │   │   ├── test_user_journeys.py  # Complete user workflows
-│   │   ├── test_auth_flow.py      # Authentication flows
 │   │   └── test_health_tracking.py # Health data workflows
 │   └── fixtures/
 │       ├── __init__.py
-│       ├── auth_fixtures.py       # Authentication test data
 │       ├── user_fixtures.py       # User test data
 │       └── health_fixtures.py     # Health data fixtures
 ├── app/
 │   ├── features/
-│   │   ├── auth/
-│   │   │   ├── tests/
-│   │   │   │   ├── __init__.py
-│   │   │   │   ├── unit/
-│   │   │   │   │   ├── test_auth_service.py
-│   │   │   │   │   ├── test_auth_schemas.py
-│   │   │   │   │   └── test_password_utils.py
-│   │   │   │   └── integration/
-│   │   │   │       ├── test_auth_router.py
-│   │   │   │       └── test_auth_database.py
-│   │   │   ├── domain/         # Business logic
-│   │   │   ├── infrastructure/ # Database/External APIs
-│   │   │   └── presentation/   # Controllers/Routes
 │   │   ├── users/
 │   │   │   └── tests/
 │   │   │       ├── unit/
@@ -97,22 +82,21 @@ backend/
 - Business logic in services
 - Data validation (schemas)
 - Utility functions
-- Security functions (password hashing, token generation)
 
 **Example Test Structure**:
 ```python
-# app/features/auth/tests/unit/test_auth_service.py
-class TestAuthService:
-    def test_create_user_with_valid_data_should_return_user(self):
+# app/features/health/tests/unit/test_health_service.py
+class TestHealthService:
+    def test_create_health_record_with_valid_data_should_return_record(self):
         # Arrange (Given)
-        user_data = {"email": "test@example.com", "password": "secure123"}
+        record_data = {"patient_id": "123", "metric_type": "weight", "value": 150}
         
         # Act (When)
-        result = auth_service.create_user(user_data)
+        result = health_service.create_record(record_data)
         
         # Assert (Then)
-        assert result.email == "test@example.com"
-        assert result.password_hash is not None
+        assert result.metric_type == "weight"
+        assert result.value == 150
 ```
 
 ### 2. Integration Tests (20% of tests)
@@ -128,25 +112,24 @@ class TestAuthService:
 - Router endpoints with request/response
 - Database operations (CRUD)
 - Supabase client interactions
-- Authentication middleware
 - Cross-feature interactions
 
 **Example Test Structure**:
 ```python
-# app/features/auth/tests/integration/test_auth_router.py
-class TestAuthRouter:
-    async def test_register_endpoint_creates_user_in_database(self, client, db_session):
+# app/features/health/tests/integration/test_health_router.py
+class TestHealthRouter:
+    async def test_create_health_record_endpoint_stores_in_database(self, client, db_session):
         # Arrange
-        user_data = {"email": "new@example.com", "password": "secure123"}
+        record_data = {"patient_id": "123", "metric_type": "weight", "value": 150}
         
         # Act
-        response = await client.post("/auth/register", json=user_data)
+        response = await client.post("/health/records", json=record_data)
         
         # Assert
         assert response.status_code == 201
-        # Verify user exists in database
-        user = await db_session.get_user_by_email("new@example.com")
-        assert user is not None
+        # Verify record exists in database
+        record = await db_session.get_health_record(record_data["patient_id"])
+        assert record is not None
 ```
 
 ### 3. End-to-End Tests (10% of tests)
@@ -159,30 +142,10 @@ class TestAuthRouter:
 - Focus on critical user journeys
 
 **Coverage Areas**:
-- User registration → login → profile access
 - Health data creation → retrieval → updates
-- Authentication flows with token refresh
 - Error handling and recovery scenarios
 
 ## Feature-Specific Testing Strategy
-
-### Auth Feature
-**Unit Tests**:
-- Password hashing and verification
-- JWT token creation and validation
-- User data validation schemas
-- Permission checking logic
-
-**Integration Tests**:
-- Registration endpoint with database persistence
-- Login endpoint with token generation
-- Protected route access with valid/invalid tokens
-- Password reset flow
-
-**E2E Tests**:
-- Complete registration → email verification → login flow
-- OAuth integration flows
-- Session management and token refresh
 
 ### Users Feature
 **Unit Tests**:
@@ -248,7 +211,6 @@ markers =
     integration: Integration tests
     e2e: End-to-end tests
     slow: Slow running tests
-    auth: Authentication related tests
     health: Health feature tests
     users: User feature tests
 ```
@@ -285,7 +247,6 @@ markers =
 
 ### Current State Assessment
 - Basic FastAPI boilerplate ✓
-- Auth functionality (registration, login) ✓
 - Supabase integration ✓
 - Basic project structure ✓
 
@@ -300,18 +261,18 @@ markers =
   faker==20.1.0
   ```
 - [ ] **Task 2**: Create minimal pytest.ini (10 mins)
-- [ ] **Task 3**: Enhance existing conftest.py with auth fixtures (30 mins)
+- [ ] **Task 3**: Enhance existing conftest.py with health data fixtures (30 mins)
 - [ ] **Task 4**: Create basic test directory structure (15 mins)
 
 #### Afternoon (2-3 hours): Write Essential Tests
-- [ ] **Task 5**: Auth unit tests (1 hour)
-  - Test password hashing/verification
-  - Test JWT token creation/validation
-  - Test auth schema validation
-- [ ] **Task 6**: Auth integration tests (1 hour)  
-  - Test registration endpoint
-  - Test login endpoint
-  - Test protected route access
+- [ ] **Task 5**: Health feature unit tests (1 hour)
+  - Test health data validation
+  - Test metric calculations
+  - Test schema validation
+- [ ] **Task 6**: Health feature integration tests (1 hour)  
+  - Test health record creation endpoint
+  - Test health data retrieval endpoint
+  - Test health data update operations
 - [ ] **Task 7**: Basic health check test (15 mins)
 - [ ] **Task 8**: Run tests and fix any issues (30 mins)
 
@@ -325,8 +286,8 @@ markers =
 
 ### Success Criteria for Today
 - [ ] Tests run with `pytest` command
-- [ ] Basic auth functionality is tested
-- [ ] At least 70% coverage on auth features
+- [ ] Basic health functionality is tested
+- [ ] At least 70% coverage on health features
 - [ ] All tests pass consistently
 - [ ] Foundation ready for incremental additions
 
@@ -369,31 +330,31 @@ backend/tests/
 ├── conftest.py (enhance existing)
 ├── integration/
 │   ├── __init__.py
-│   └── test_auth_api.py
+│   └── test_health_api.py
 └── unit/
     ├── __init__.py
-    └── test_auth_service.py
+    └── test_health_service.py
 ```
 
-### Task 4: Auth Unit Tests (1 hour)
-Write 5-8 focused unit tests for your existing auth logic:
-- Password hashing works
-- JWT tokens are created correctly
+### Task 4: Health Feature Unit Tests (1 hour)
+Write 5-8 focused unit tests for your health logic:
+- Health data validation works
+- Metric calculations are correct
 - Schema validation catches bad input
 - Business logic handles edge cases
 
-### Task 5: Auth Integration Tests (1 hour)  
+### Task 5: Health Feature Integration Tests (1 hour)  
 Write 3-4 integration tests:
-- POST /auth/register creates user
-- POST /auth/login returns token
-- Protected routes require authentication
-- Invalid tokens are rejected
+- POST /health/records creates record
+- GET /health/records returns data
+- Health data endpoints work correctly
+- Invalid data is rejected
 
 ### That's It!
 
 This gives you:
 ✅ Working test suite you can run daily
-✅ Confidence in your auth system  
+✅ Confidence in your health data system  
 ✅ Foundation to add more tests incrementally
 ✅ About 80% of the value with 5% of the complexity
 

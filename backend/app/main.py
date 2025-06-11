@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.features.auth.router import router as auth_router
-
 app = FastAPI(
     title="HomeHealth API",
     description="Healthcare application API with feature-based architecture",
@@ -24,7 +22,6 @@ async def health_check():
     return {"status": "healthy", "service": "homehealth-api"}
 
 # Feature routers
-app.include_router(auth_router, prefix="/api/v1/auth", tags=["authentication"])
 
 @app.get("/")
 async def root():

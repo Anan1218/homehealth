@@ -1,7 +1,7 @@
 # Frontend Testing Plan
 
 ## Overview
-This document outlines the testing strategy for our React frontend application with feature-based organization. The application currently includes authentication functionality and follows a modular architecture.
+This document outlines the testing strategy for our React frontend application with feature-based organization. The application follows a modular architecture focused on health data management and user experience.
 
 ## 📋 **Implementation Progress Checklist**
 
@@ -13,44 +13,43 @@ This document outlines the testing strategy for our React frontend application w
 - [x] Add test scripts to package.json
 - [x] Verify basic test infrastructure works
 
-### **Phase 2: Auth Feature Testing** 🔄 IN PROGRESS
-#### **Auth Services** ✅ COMPLETED  
-- [x] AuthService.register() tests (3 test cases)
-- [x] AuthService.login() tests (2 test cases) 
-- [x] AuthService.logout() tests (2 test cases)
-- [x] AuthService.getCurrentUser() tests (2 test cases)
-- [x] **Result: 9/9 tests passing, 100% line coverage**
+### **Phase 2: Core Feature Testing** 🔄 IN PROGRESS
+#### **Health Data Services** ⏳ TODO
+- [ ] HealthService.createRecord() tests
+- [ ] HealthService.getRecords() tests  
+- [ ] HealthService.updateRecord() tests
+- [ ] HealthService.deleteRecord() tests
+- [ ] Error handling and data validation tests
 
-#### **Auth Components** ⏳ TODO
-- [ ] LoginForm component tests
+#### **Health Components** ⏳ TODO
+- [ ] HealthRecordForm component tests
   - [ ] Form rendering and initial state
-  - [ ] Form validation (email, password)
-  - [ ] Successful login submission
+  - [ ] Form validation (required fields, data types)
+  - [ ] Successful form submission
   - [ ] Error handling and display
   - [ ] Loading states
-- [ ] SignupForm component tests
-  - [ ] Form rendering and initial state
-  - [ ] Form validation (email, password, confirm password, full name)
-  - [ ] Successful signup submission
-  - [ ] Error handling and display
-  - [ ] Loading states
-- [ ] Protected route component tests
-- [ ] Auth status indicator tests
+- [ ] HealthRecordList component tests
+  - [ ] List rendering with data
+  - [ ] Empty state handling
+  - [ ] Filtering and sorting functionality
+  - [ ] Item interaction handling
+- [ ] HealthDashboard component tests
+  - [ ] Dashboard layout and sections
+  - [ ] Data visualization components
+  - [ ] Metric calculations and display
 
-#### **Auth Hooks** ⏳ TODO
-- [ ] useAuth hook tests
-  - [ ] Initial state
-  - [ ] Login functionality
-  - [ ] Logout functionality
-  - [ ] Session persistence
+#### **Health Hooks** ⏳ TODO
+- [ ] useHealthRecords hook tests
+  - [ ] Data fetching functionality
+  - [ ] CRUD operations
   - [ ] Error handling
   - [ ] Loading states
+  - [ ] Caching behavior
 
-#### **Auth Integration Tests** ⏳ TODO
-- [ ] Complete login flow (form → service → state update)
-- [ ] Complete signup flow (form → service → state update)
-- [ ] Protected route access scenarios
-- [ ] Token refresh scenarios
+#### **Health Integration Tests** ⏳ TODO
+- [ ] Complete health record creation flow
+- [ ] Health data retrieval and display flow
+- [ ] Health record update scenarios
 - [ ] Error boundary integration
 
 ### **Phase 3: Shared Module Testing** ⏳ TODO
@@ -84,21 +83,23 @@ This document outlines the testing strategy for our React frontend application w
 - [ ] E2E testing with Playwright (optional)
 
 ### **📊 Current Status Summary**
-- **✅ Tests Passing:** 9/9 (100%)
-- **📈 Coverage:** 56.07% overall, 100% on AuthService
-- **🎯 Next Priority:** Auth Components (LoginForm, SignupForm)
-- **🏃‍♂️ Current Phase:** Phase 2 (Auth Feature Testing)
+- **✅ Tests Passing:** Infrastructure complete
+- **📈 Coverage:** Ready to begin feature testing
+- **🎯 Next Priority:** Health Components and Services
+- **🏃‍♂️ Current Phase:** Phase 2 (Core Feature Testing)
 
 ### **🎯 Coverage Goals**
 - **Target:** 80%+ line coverage overall
-- **Critical Paths:** 100% coverage for auth flow
-- **Current:** 56.07% overall, 100% on tested modules
+- **Critical Paths:** 100% coverage for health data flow
+- **Current:** Ready to begin implementation
 
 ## Current Project Structure
 ```
 src/
 ├── features/
-│   └── auth/
+│   └── health/
+│       ├── components/
+│       ├── hooks/
 │       └── services/
 ├── shared/
 │   ├── services/
@@ -120,22 +121,22 @@ src/
 
 Each feature should contain its own tests following this structure:
 ```
-src/features/auth/
+src/features/health/
 ├── components/
-│   ├── LoginForm/
-│   │   ├── LoginForm.tsx
-│   │   └── LoginForm.test.tsx
-│   └── SignupForm/
-│       ├── SignupForm.tsx
-│       └── SignupForm.test.tsx
+│   ├── HealthRecordForm/
+│   │   ├── HealthRecordForm.tsx
+│   │   └── HealthRecordForm.test.tsx
+│   └── HealthDashboard/
+│       ├── HealthDashboard.tsx
+│       └── HealthDashboard.test.tsx
 ├── hooks/
-│   ├── useAuth.ts
-│   └── useAuth.test.ts
+│   ├── useHealthRecords.ts
+│   └── useHealthRecords.test.ts
 ├── services/
-│   ├── authService.ts
-│   └── authService.test.ts
+│   ├── healthService.ts
+│   └── healthService.test.ts
 └── __tests__/
-    └── auth.integration.test.tsx
+    └── health.integration.test.tsx
 ```
 
 ### 3. Test Categories
@@ -174,28 +175,28 @@ src/features/auth/
    - Create `src/__tests__/utils/` for test utilities
    - Setup MSW for API mocking
 
-#### Phase 2: Auth Feature Testing (Day 2-3)
-1. **Auth Services Tests**
-   - Test login/logout/signup API calls
-   - Test token management
+#### Phase 2: Health Feature Testing (Day 2-3)
+1. **Health Services Tests**
+   - Test health data CRUD operations
+   - Test data validation and transformation
    - Test error handling
 
-2. **Auth Components Tests**
-   - Login form component
-   - Signup form component
-   - Protected route components
-   - Auth status indicators
+2. **Health Components Tests**
+   - Health record form component
+   - Health dashboard component
+   - Health record list component
+   - Health data visualization components
 
-3. **Auth Hooks Tests**
-   - `useAuth` hook functionality
-   - Authentication state management
-   - Session persistence
+3. **Health Hooks Tests**
+   - `useHealthRecords` hook functionality
+   - Health data state management
+   - Data synchronization
 
-4. **Auth Integration Tests**
-   - Complete login flow
-   - Complete signup flow
-   - Protected route access
-   - Token refresh scenarios
+4. **Health Integration Tests**
+   - Complete health record creation flow
+   - Health data retrieval and display
+   - Health record update scenarios
+   - Data validation workflows
 
 #### Phase 3: Shared Module Testing (Day 4)
 1. **Shared Services Tests**
@@ -226,7 +227,7 @@ src/features/auth/
 ### 6. Test Coverage Goals
 - **Unit Tests**: 80%+ line coverage
 - **Integration Tests**: Cover all major user flows
-- **Critical Paths**: 100% coverage for auth and core functionality
+- **Critical Paths**: 100% coverage for health data operations
 
 ### 7. Testing Best Practices
 
@@ -258,7 +259,7 @@ describe('ComponentName', () => {
 - Mock external dependencies (APIs, third-party libraries)
 - Use MSW for HTTP request mocking
 - Mock React Router for navigation tests
-- Mock Supabase client for auth tests
+- Mock Supabase client for data operations
 
 ### 8. Continuous Integration
 - Run tests on every PR

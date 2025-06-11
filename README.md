@@ -4,7 +4,7 @@ A scalable healthcare application built with React.js frontend, FastAPI backend,
 
 ## 🏗️ Architecture
 
-**Feature-Based Organization**: Each feature (auth, appointments, patients, etc.) contains its own models, services, API routes, and UI components, promoting modularity and maintainability.
+**Feature-Based Organization**: Each feature (health records, appointments, patients, etc.) contains its own models, services, API routes, and UI components, promoting modularity and maintainability.
 
 ### Project Structure
 ```
@@ -190,8 +190,7 @@ features/feature_name/
 ## 🚀 Next Steps
 
 1. Set up Supabase database tables
-2. Configure authentication policies
-3. Add feature-specific components
+2. Add feature-specific components
 4. Implement business logic in services
 5. Add comprehensive testing
 6. Deploy to production
